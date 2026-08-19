@@ -23,7 +23,8 @@ local function auto_install()
     local installing_linters = {}
 
     for _, linter_name in linters_to_install(nvim_lint.linters_by_ft) do
-        local mason_linter_identifier = mapping.nvimlint_to_package[linter_name]
+        local mason_linter_identifier = pcall(registry.get_package, linter_name) and linter_name
+            or mapping.nvimlint_to_package[linter_name]
         if mason_linter_identifier then
             if not vim.tbl_contains(installing_linters, mason_linter_identifier) then
                 table.insert(installing_linters, mason_linter_identifier)
